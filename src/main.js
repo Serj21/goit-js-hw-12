@@ -1,7 +1,7 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages, showLoader, hideLoader } from './js/pixabay-api';
-import { clearGallery, renderImages } from './js/render-functions';
+import { clearGallery, renderImages, galleryEl } from './js/render-functions';
 console.log(5);
 const searchForm = document.querySelector('#search-form');
 const inputEl = document.querySelector('#search-input');
@@ -22,9 +22,10 @@ iziToast.settings({
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
-
-  const searchTerm = inputEl.value.trim();
-  if (searchTerm === '') {
+  page = 1;
+  query = inputEl.value.trim();
+  galleryEl.innerHTML = '';
+  if (query === '') {
     iziToast.error({
       title: 'Error',
       message: ' Please enter image name',
@@ -36,7 +37,7 @@ searchForm.addEventListener('submit', async e => {
   clearGallery();
 
   try {
-    const data = await fetchImages(searchTerm);
+    const data = await fetchImages(query, page);
     if (data.hits.length === 0) {
       iziToast.error({
         title: 'Error',
@@ -45,8 +46,10 @@ searchForm.addEventListener('submit', async e => {
       });
     } else {
       renderImages(data.hits);
+      maxPage = Math.ceil(data.totalHits / 15);
     }
     hideLoader();
+    updateBtnStatus();
   } catch (error) {
     iziToast.error({
       title: 'Error',
@@ -58,7 +61,35 @@ searchForm.addEventListener('submit', async e => {
 async function onLoadMoreClick(e) {
   page += 1;
   showLoader();
-  // try {
-  //     const data = await
-  // }
+
+  try {
+    const data = await fetchImages(query, page);
+    renderImages(data.hits);
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Failed to fetch images',
+    });
+  }
+  hideLoader();
+  updateBtnStatus();
+}
+
+function updateBtnStatus() {
+  if (page >= maxPage) {
+    hideLoadMoreBtn();
+    iziToast.error({
+      title: 'Error',
+      message: "We're sorry, but you've reached the end of search results.",
+    });
+  } else {
+    showLoadMoreBtn();
+  }
+}
+
+function hideLoadMoreBtn() {
+  btnLoadMore.classList.add('hidden');
+}
+function showLoadMoreBtn() {
+  btnLoadMore.classList.remove('hidden');
 }

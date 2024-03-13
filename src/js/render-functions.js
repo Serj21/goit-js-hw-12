@@ -1,7 +1,7 @@
 import simpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const galleryEl = document.querySelector('.gallery');
+export const galleryEl = document.querySelector('.gallery');
 
 const gallery = new simpleLightbox('.gallery a', {
   captionsData: 'alt',
