@@ -40,6 +40,7 @@ searchForm.addEventListener('submit', async e => {
   try {
     const data = await fetchImages(query, page);
     if (data.hits.length === 0) {
+      maxPage = 0;
       iziToast.error({
         title: 'Error',
         message:
