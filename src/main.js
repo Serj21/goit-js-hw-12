@@ -2,7 +2,7 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import { fetchImages, showLoader, hideLoader } from './js/pixabay-api';
 import { clearGallery, renderImages } from './js/render-functions';
-
+console.log(5);
 const searchForm = document.querySelector('#search-form');
 const inputEl = document.querySelector('#search-input');
 const btnLoadMore = document.querySelector('.js-btn-load');
@@ -11,7 +11,7 @@ let page;
 let query;
 let maxPage;
 
-btnLoadMore.addEventListener('click', onLoadMoreClick)
+btnLoadMore.addEventListener('click', onLoadMoreClick);
 
 iziToast.settings({
   timeout: 2000,
@@ -22,6 +22,7 @@ iziToast.settings({
 
 searchForm.addEventListener('submit', async e => {
   e.preventDefault();
+
   const searchTerm = inputEl.value.trim();
   if (searchTerm === '') {
     iziToast.error({
@@ -34,18 +35,16 @@ searchForm.addEventListener('submit', async e => {
   showLoader();
   clearGallery();
 
-  //   fetchImages(searchTerm)
-  //     .then(images => {
   try {
-    const images = await fetchImages(searchTerm);
-    if (images.length === 0) {
+    const data = await fetchImages(searchTerm);
+    if (data.hits.length === 0) {
       iziToast.error({
         title: 'Error',
         message:
           'Sorry, there are no images matching your search query. Please try again!',
       });
     } else {
-      renderImages(images);
+      renderImages(data.hits);
     }
     hideLoader();
   } catch (error) {
@@ -56,13 +55,10 @@ searchForm.addEventListener('submit', async e => {
   }
 });
 
-
-
-
 async function onLoadMoreClick(e) {
-    page += 1;
-    showLoader()
-    try {
-        const data = await
-    }
+  page += 1;
+  showLoader();
+  // try {
+  //     const data = await
+  // }
 }
