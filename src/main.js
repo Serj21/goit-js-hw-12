@@ -25,6 +25,7 @@ searchForm.addEventListener('submit', async e => {
   page = 1;
   query = inputEl.value.trim();
   galleryEl.innerHTML = '';
+  hideLoadMoreBtn();
   if (query === '') {
     iziToast.error({
       title: 'Error',
@@ -60,11 +61,13 @@ searchForm.addEventListener('submit', async e => {
 
 async function onLoadMoreClick(e) {
   page += 1;
+  hideLoadMoreBtn();
   showLoader();
 
   try {
     const data = await fetchImages(query, page);
     renderImages(data.hits);
+    scroll();
   } catch (error) {
     iziToast.error({
       title: 'Error',
@@ -92,4 +95,13 @@ function hideLoadMoreBtn() {
 }
 function showLoadMoreBtn() {
   btnLoadMore.classList.remove('hidden');
+}
+
+function scroll() {
+  const cardElem = galleryEl.firstElementChild;
+  const height = cardElem.getBoundingClientRect().height * 2;
+  scrollBy({
+    behavior: 'smooth',
+    top: height,
+  });
 }

@@ -95,6 +95,7 @@ button:hover {
   flex-wrap: wrap;
   justify-content: center;
   gap: 24px;
+  margin-bottom: 20px;
 }
 
 img {
