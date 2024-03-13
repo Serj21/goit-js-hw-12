@@ -10,6 +10,7 @@ const btnLoadMore = document.querySelector('.js-btn-load');
 let page;
 let query;
 let maxPage;
+const per_page = 15;
 
 btnLoadMore.addEventListener('click', onLoadMoreClick);
 
@@ -48,7 +49,7 @@ searchForm.addEventListener('submit', async e => {
       });
     } else {
       renderImages(data.hits);
-      maxPage = Math.ceil(data.totalHits / 15);
+      maxPage = Math.ceil(data.totalHits / per_page);
     }
     hideLoader();
     updateBtnStatus();
